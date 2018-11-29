@@ -1,0 +1,80 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vaults_pradnesh_name": {
+            "defaultValue": "pradneshvault",
+            "type": "String"
+        },
+        "secrets_mysecret_name": {
+            "defaultValue": "mysecret1",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.KeyVault/vaults",
+            "name": "[parameters('vaults_pradnesh_name')]",
+            "apiVersion": "2016-10-01",
+            "location": "eastus",
+            "tags": {},
+            "scale": null,
+            "properties": {
+                "sku": {
+                    "family": "A",
+                    "name": "Standard"
+                },
+                "tenantId": "1d023485-4e7b-481c-84b5-177d5a4d5729",
+                "accessPolicies": [
+                    {
+                        "tenantId": "1d023485-4e7b-481c-84b5-177d5a4d5729",
+                        "objectId": "d107bdf6-140a-429e-b66a-c4d854111d2c",
+                        "permissions": {
+                            "keys": [
+                                "Get",
+                                "List",
+                                "Update",
+                                "Create",
+                                "Import",
+                                "Delete",
+                                "Recover",
+                                "Backup",
+                                "Restore"
+                            ],
+                            "secrets": [
+                                "Get",
+                                "List",
+                                "Set",
+                                "Delete",
+                                "Recover",
+                                "Backup",
+                                "Restore"
+                            ]                           
+                        }
+                    }
+                ],
+                "enabledForDeployment": false,
+                "enabledForDiskEncryption": false,
+                "enabledForTemplateDeployment": false
+            },
+            "dependsOn": []
+        },
+        {
+            "type": "Microsoft.KeyVault/vaults/secrets",
+            "name": "[concat(parameters('vaults_pradnesh_name'), '/', parameters('secrets_mysecret_name'))]",
+            "apiVersion": "2016-10-01",
+            "location": "eastus",
+            "scale": null,
+            "properties": {
+                "value": "Admin123",
+                "attributes": {
+                    "enabled": true
+                      }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('vaults_pradnesh_name'))]"
+            ]
+        }
+    ]
+}
